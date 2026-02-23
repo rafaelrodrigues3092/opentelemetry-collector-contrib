@@ -1,0 +1,11 @@
+cloudflare_encoding:
+
+cloudflare_encoding/custom:
+  timestamp_field: MyTimestamp
+  timestamp_format: unixnano
+  separator: _
+  attributes:
+    ClientIP: http_request.client_ip
+
+cloudflare_encoding/invalid:
+  timestamp_format: epoch
