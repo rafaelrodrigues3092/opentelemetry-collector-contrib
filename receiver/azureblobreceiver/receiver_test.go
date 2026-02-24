@@ -37,7 +37,7 @@ func TestConsumeLogsJSON(t *testing.T) {
 
 	logsConsumer.setNextLogsConsumer(logsSink)
 
-	err := logsConsumer.consumeLogsJSON(t.Context(), logsJSON)
+	err := logsConsumer.consumeLogs(t.Context(), "logs-1.json", logsJSON)
 	require.NoError(t, err)
 	assert.Equal(t, 1, logsSink.LogRecordCount())
 }
@@ -51,7 +51,7 @@ func TestConsumeTracesJSON(t *testing.T) {
 
 	tracesConsumer.setNextTracesConsumer(tracesSink)
 
-	err := tracesConsumer.consumeTracesJSON(t.Context(), tracesJSON)
+	err := tracesConsumer.consumeTraces(t.Context(), "traces-1.json", tracesJSON)
 	require.NoError(t, err)
 	assert.Equal(t, 2, tracesSink.SpanCount())
 }
@@ -63,5 +63,5 @@ func getBlobReceiver(t *testing.T) (component.Component, error) {
 	blobEventHandler := getBlobEventHandler(t, blobClient)
 
 	getBlobEventHandler(t, blobClient)
-	return newReceiver(set, blobEventHandler)
+	return newReceiver(set, blobEventHandler, nil)
 }

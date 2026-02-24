@@ -30,6 +30,9 @@ The following settings can be optionally configured:
   - `container_name:` (default = "logs"): Name of the blob container with the logs
 - `traces:`
   - `container_name:` (default = "traces"): Name of the blob container with the traces
+- `encodings:` (optional): A list of encoding extensions and their associated file suffixes. When configured, the receiver will use matching encoding extensions to unmarshal blob data. If no encoding extension matches a blob's name, the default JSON unmarshaler is used.
+  - `extension:` The component ID of the encoding extension (e.g., `otlp_encoding`)
+  - `suffix:` The file suffix to associate with this encoding (e.g., `.binpb`)
 
 Authenticating using a connection string requires configuration of the following additional setting:
 
@@ -72,6 +75,22 @@ receivers:
     storage_account_url: https://accountName.blob.core.windows.net
     event_hub:
       endpoint: Endpoint=sb://oteldata.servicebus.windows.net/;SharedAccessKeyName=otelhubbpollicy;SharedAccessKey=mPJVubIK5dJ6mLfZo1ucsdkLysLSQ6N7kddvsIcmoEs=;EntityPath=otellhub
+```
+
+Using encoding extensions:
+
+```yaml
+extensions:
+  otlp_encoding:
+
+receivers:
+  azureblob:
+    connection_string: DefaultEndpointsProtocol=https;AccountName=accountName;AccountKey=+idLkHYcL0MUWIKYHm2j4Q==;EndpointSuffix=core.windows.net
+    event_hub:
+      endpoint: Endpoint=sb://oteldata.servicebus.windows.net/;SharedAccessKeyName=otelhubbpollicy;SharedAccessKey=mPJVubIK5dJ6mLfZo1ucsdkLysLSQ6N7kddvsIcmoEs=;EntityPath=otellhub
+    encodings:
+      - extension: otlp_encoding
+        suffix: ".binpb"
 ```
 
 The receiver subscribes [on the events](https://docs.microsoft.com/en-us/azure/storage/blobs/storage-blob-event-overview) published by Azure Blob Storage and handled by Azure Event Hub. When it receives `Blob Create` event, it reads the logs or traces from a corresponding blob and deletes it after processing.

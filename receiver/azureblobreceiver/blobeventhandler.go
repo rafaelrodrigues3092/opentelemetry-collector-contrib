@@ -154,12 +154,12 @@ func (p *azureBlobEventHandler) newMessageHandler(ctx context.Context, event *az
 		}
 		switch containerName {
 		case p.logsContainerName:
-			err = p.logsDataConsumer.consumeLogsJSON(ctx, blobData.Bytes())
+			err = p.logsDataConsumer.consumeLogs(ctx, blobName, blobData.Bytes())
 			if err != nil {
 				return err
 			}
 		case p.tracesContainerName:
-			err = p.tracesDataConsumer.consumeTracesJSON(ctx, blobData.Bytes())
+			err = p.tracesDataConsumer.consumeTraces(ctx, blobName, blobData.Bytes())
 			if err != nil {
 				return err
 			}

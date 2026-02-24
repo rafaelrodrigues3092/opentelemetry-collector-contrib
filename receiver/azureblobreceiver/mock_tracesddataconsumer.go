@@ -14,13 +14,13 @@ type mockTracesDataConsumer struct {
 	mock.Mock
 }
 
-// ConsumeTracesJSON provides a mock function with given fields: ctx, json
-func (_m *mockTracesDataConsumer) consumeTracesJSON(ctx context.Context, json []byte) error {
-	ret := _m.Called(ctx, json)
+// consumeTraces provides a mock function with given fields: ctx, blobName, data
+func (_m *mockTracesDataConsumer) consumeTraces(ctx context.Context, blobName string, data []byte) error {
+	ret := _m.Called(ctx, blobName, data)
 
 	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, []byte) error); ok {
-		r0 = rf(ctx, json)
+	if rf, ok := ret.Get(0).(func(context.Context, string, []byte) error); ok {
+		r0 = rf(ctx, blobName, data)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -35,6 +35,6 @@ func (_m *mockTracesDataConsumer) setNextTracesConsumer(nextracesConsumer consum
 
 func newMockTracesDataConsumer() *mockTracesDataConsumer {
 	tracesDataConsumer := &mockTracesDataConsumer{}
-	tracesDataConsumer.On("consumeTracesJSON", mock.Anything, mock.Anything).Return(nil)
+	tracesDataConsumer.On("consumeTraces", mock.Anything, mock.Anything, mock.Anything).Return(nil)
 	return tracesDataConsumer
 }

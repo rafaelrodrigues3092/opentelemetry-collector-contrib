@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 
+	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configopaque"
 	"go.uber.org/multierr"
 )
@@ -19,6 +20,15 @@ var (
 	errMissingStorageAccountURL = errors.New(`"StorageAccountURL" is not specified in config`)
 	errMissingConnectionString  = errors.New(`"ConnectionString" is not specified in config`)
 )
+
+// Encoding defines the encoding configuration for the blob receiver.
+type Encoding struct {
+	Extension component.ID `mapstructure:"extension"`
+	Suffix    string       `mapstructure:"suffix"`
+
+	// prevent unkeyed literal initialization
+	_ struct{}
+}
 
 type Config struct {
 	// Type of authentication to use
@@ -38,6 +48,8 @@ type Config struct {
 	Logs LogsConfig `mapstructure:"logs"`
 	// Traces related configurations
 	Traces TracesConfig `mapstructure:"traces"`
+	// Encodings defines the list of encoding extensions and their associated suffixes
+	Encodings []Encoding `mapstructure:"encodings"`
 	// prevent unkeyed literal initialization
 	_ struct{}
 }
