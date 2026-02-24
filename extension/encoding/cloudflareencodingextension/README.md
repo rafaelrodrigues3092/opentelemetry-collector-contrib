@@ -33,9 +33,10 @@ This extension unmarshals Cloudflare Logpush NDJSON payloads into OpenTelemetry 
 - Derives log severity from `EdgeResponseStatus`.
 - Preserves original record as log body map.
 
-## Compatibility with `awss3receiver`
+## Example
 
-This extension is compatible with `awss3receiver` through its `encodings` setting. Example:
+This extension is compatible with receivers supporting custom encodings.
+Example with `awss3receiver`
 
 ```yaml
 extensions:
