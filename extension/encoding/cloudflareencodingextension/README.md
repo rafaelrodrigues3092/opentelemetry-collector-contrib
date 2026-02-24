@@ -7,7 +7,7 @@ This extension unmarshals Cloudflare Logpush NDJSON payloads into OpenTelemetry 
 | Status                                                                                                                           |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Stability                                                                                                                        | [alpha]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| Distributions                                                                                                                    | [contrib]                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| Distributions                                                                                                                    | []                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | Issues                                                                                                                           | [![Open issues](https://img.shields.io/github/issues-search/open-telemetry/opentelemetry-collector-contrib?query=is%3Aissue%20is%3Aopen%20label%3Aextension%2Fcloudflareencoding%20&label=open&color=orange&logo=opentelemetry)](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues?q=is%3Aopen+is%3Aissue+label%3Aextension%2Fcloudflareencoding) [![Closed issues](https://img.shields.io/github/issues-search/open-telemetry/opentelemetry-collector-contrib?query=is%3Aissue%20is%3Aclosed%20label%3Aextension%2Fcloudflareencoding%20&label=closed&color=blue&logo=opentelemetry)](https://github.com/open-telemetry/opentelemetry-collector-contrib/issues?q=is%3Aclosed+is%3Aissue+label%3Aextension%2Fcloudflareencoding) |
 | [Code Owners](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/CONTRIBUTING.md#becoming-a-code-owner) | [@Rafael-Rodrigues_crdn](https://www.github.com/Rafael-Rodrigues_crdn)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 
@@ -43,16 +43,24 @@ extensions:
     timestamp_field: EdgeStartTimestamp
     timestamp_format: rfc3339
     attributes:
-      ClientIP: http_request.client_ip
+      ClientIP: http.request.client_ip
+      EdgeResponseStatus: http.status.code
+      ZoneName: zone.name
+      ClientRequestHost: host.name
 
 receivers:
   awss3:
-    logs:
-      s3downloader:
-        s3_bucket: my-bucket
-      starttime: 2026-02-20T00:00:00Z
-      endtime: 2026-02-20T01:00:00Z
-      encodings:
-        - extension: cloudflare_encoding
-          suffix: .cloudflare.ndjson
+    starttime: '2026-02-25 19:59'
+    endtime: '2026-02-25 20:01'
+    s3downloader:
+      region: 'us-east-1'
+      s3_bucket: 'test'
+      s3_prefix: 'logs'
+      s3_force_path_style: true
+      s3_partition_format: 'year=%Y/month=%m/day=%d/hour=%H/minute=%M'
+      s3_partition_timezone: 'UTC'
+      file_prefix_include_telemetry_type: false
+    encodings:
+      - extension: cloudflare_encoding
+        suffix: '.json'
 ```
